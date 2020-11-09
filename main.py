@@ -8,7 +8,7 @@ from Wp_cost_graph import diffusion_distance
 from node2coords import Node2Coords
 
 
-def run_non_stab(argv):
+def main(argv):
     # parse command line arguments
     print('running')
     # first initialize the arguments
@@ -144,7 +144,7 @@ def run_non_stab(argv):
                 bary, loss, latent_representation, weight_matrix, my_lamdas = my_network(
                     betas=bary_weights[batch_size * j:num_nodes, :], my_initialization=encoder,
                     real_bary=adjacency[:, batch_size * j:num_nodes],
-                    no_parallel_comp=adjacency[:, batch_size * j:num_nodes].shape[1])
+                    J=adjacency[:, batch_size * j:num_nodes].shape[1])
                 loss.backward()  # accumulate gradients for the minibatch
                 optimizer_encoder.step()
                 optimizer_bary_weights.step()
@@ -154,14 +154,14 @@ def run_non_stab(argv):
                 if (epoch+1) == epochs:
                     if (j+1) == number_of_iterations:
                         torch.save(latent_representation,
-                                   path + 'encoder/latent_rep/latent_representation_epoch{}.pt'.format(j, epoch))
-                    torch.save(my_lamdas, path + 'weights/lamdas_it{}_epoch{}.pt'.format(j, epoch))
+                                   path + 'encoder/latent_rep/latent_representation_epoch{}.pt'.format(epoch), _use_new_zipfile_serialization=False)
+                    torch.save(my_lamdas, path + 'weights/lamdas_it{}_epoch{}.pt'.format(j, epoch), _use_new_zipfile_serialization=False)
 
             else:
                 bary, loss, latent_representation, weight_matrix, my_lamdas = my_network(
                     betas=bary_weights[batch_size * j:batch_size * (j + 1), :], my_initialization=encoder,
                     real_bary=adjacency[:, batch_size * j:batch_size * (j + 1)],
-                    no_parallel_comp=batch_size)
+                    J=batch_size)
                 loss.backward()  # accumulate gradients for the minibatch
                 optimizer_encoder.step()
                 optimizer_bary_weights.step()
@@ -171,8 +171,8 @@ def run_non_stab(argv):
                 if (epoch + 1) == epochs:
                     if (j + 1) == number_of_iterations:
                         torch.save(latent_representation,
-                                   path + 'encoder/latent_rep/latent_representation_epoch{}.pt'.format(j, epoch))
-                    torch.save(my_lamdas, path + 'weights/lamdas_it{}_epoch{}.pt'.format(j, epoch))
+                                   path + 'encoder/latent_rep/latent_representation_epoch{}.pt'.format(epoch), _use_new_zipfile_serialization=False)
+                    torch.save(my_lamdas, path + 'weights/lamdas_it{}_epoch{}.pt'.format(j, epoch), _use_new_zipfile_serialization=False)
 
         avg_epoch_loss = epoch_loss / number_of_iterations
         print("The loss at epoch {} is {}".format(epoch, avg_epoch_loss))
@@ -185,6 +185,6 @@ def run_non_stab(argv):
 
 
 if __name__ == "__main__":
-    run_non_stab(sys.argv[1:])
+    main(sys.argv[1:])
 
 
