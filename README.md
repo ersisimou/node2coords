@@ -13,5 +13,5 @@ If you use this code, please cite the following paper:
   pages={17-29},\
   doi={10.1109/TSIPN.2020.3041940},\
   ISSN={2373-776X},\
-  month={},}
+  month={January},}
 
