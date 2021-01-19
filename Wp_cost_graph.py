@@ -20,6 +20,7 @@ def diffusion_distance(W, tau, p):
     Dt = squareform(distances)
     C = np.power(Dt, p)
     C = C + np.eye(N) * 1e-8
+    # C = C / np.max(C)  # normalize cost to avoid numerical issues - recommended for larger graphs
     return C, connected
 
 
